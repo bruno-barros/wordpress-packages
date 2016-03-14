@@ -19,11 +19,16 @@
       
     ],
     "psr-4": {
-      "WpPack\\": "src/packages"
+      "WpPack\\": "packages"
     }
   },
   "require": {
-    "php": ">=5.4"
+    "php": ">=5.4",
+    "illuminate/cache": "4.2.*",
+    "illuminate/filesystem": "4.2.*",
+    "illuminate/http": "4.2.*",
+    "illuminate/validation" : "4.2.*",
+    "illuminate/database": "4.2.*"
   },
   "require-dev": {},
   "minimum-stability": "dev",
