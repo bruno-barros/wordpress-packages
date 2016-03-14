@@ -1,0 +1,31 @@
+{
+  "name": "bruno-barros/wordpress-packages",
+  "description": "packages for wordpress",
+  "keywords": [
+    "Laravel",
+    "framework",
+    "WordPress"
+  ],
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "Bruno Barros",
+      "email": "brunodanca@gmail.com"
+    }
+  ],
+  "type": "project",
+  "autoload": {
+    "files": [
+      
+    ],
+    "psr-4": {
+      "WpPack\\": "src/packages"
+    }
+  },
+  "require": {
+    "php": ">=5.4"
+  },
+  "require-dev": {},
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
