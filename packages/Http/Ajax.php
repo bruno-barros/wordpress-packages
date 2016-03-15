@@ -92,14 +92,14 @@ class Ajax
     public function validate($nonce = null, $value = null, $message = null, $data = null)
     {
 
-        $nonce = ($nonce) ? $nonce : RequestAdapter::get('nonce');
+        $nonce = ($nonce) ? $nonce : Request::get('nonce');
         $value = ($value) ? $value : config('app.key');
 
         if (!wp_verify_nonce($nonce, $value))
         {
             $default = 'AJAX is invalid.';
 
-            $data = ($data) ? $data : RequestAdapter::except(['nonce', 'action']);
+            $data = ($data) ? $data : Request::except(['nonce', 'action']);
 
             wp_send_json([
                 'error' => true,
