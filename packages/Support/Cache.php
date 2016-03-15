@@ -110,7 +110,7 @@ class Cache
      * @param  string  $key
      * @return void
      */
-    public static function forget($key, $value)
+    public static function forget($key)
     {
         $self = static::make();
 

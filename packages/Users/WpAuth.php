@@ -15,11 +15,6 @@ use WpPack\Http\Request as Input;
  */
 class WpAuth
 {
-    /**
-     * Application
-     * @var
-     */
-    private $app;
 
     /**
      * The currently authenticated user.
@@ -52,11 +47,21 @@ class WpAuth
      */
     protected $loggedOut = false;
 
-    function __construct($app)
+    function __construct()
     {
-        $this->app = $app;
     }
 
+    private static $instance;
+
+    public static function make()
+    {
+        if(is_null(self::$instance))
+        {
+            self::$instance = new static;
+        }
+
+        return self::$instance;
+    }
 
     /**
      * Determine if the current user is authenticated.
@@ -224,7 +229,7 @@ class WpAuth
      */
     protected function getLoginCredential($credentials = array())
     {
-        $loginField = $this->app['config']['auth.credentials.login'];
+        $loginField = config('auth.credentials.login');
 
         if (isset($credentials[$loginField]))
         {
@@ -264,7 +269,7 @@ class WpAuth
      */
     protected function getPasswordCredential($credentials = array())
     {
-        $passField = $this->app['config']['auth.credentials.password'];
+        $passField = config('auth.credentials.password');
 
         if (isset($credentials[$passField]))
         {
