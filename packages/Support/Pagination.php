@@ -94,7 +94,7 @@ class Pagination
     {
         $defaults = $this->defaults;
 
-        return view($this->view, compact('links', 'defaults'))->render();
+        return view($this->view, compact('links', 'defaults'));
     }
 
     /**

@@ -34,7 +34,7 @@ class Comments
             $add_below = 'div-comment';
         }
 
-        echo view($this->itemTemplate, compact('args', 'tag', 'add_below', 'comment', 'depth'))->render();
+        echo view($this->itemTemplate, compact('args', 'tag', 'add_below', 'comment', 'depth'));
 
     }
 

@@ -16,7 +16,7 @@
   "type": "project",
   "autoload": {
     "files": [
-      
+      "packages/Support/helpers.php"
     ],
     "psr-4": {
       "WpPack\\": "packages"
