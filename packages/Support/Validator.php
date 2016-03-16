@@ -10,7 +10,7 @@ class Validator
 {
     protected static $factory;
 
-    public static function make()
+    public static function setup()
     {
         if ( ! static::$factory)
         {
@@ -22,7 +22,7 @@ class Validator
 
     public static function __callStatic($method, $args)
     {
-        $instance = static::make();
+        $instance = static::setup();
 
         switch (count($args))
         {
