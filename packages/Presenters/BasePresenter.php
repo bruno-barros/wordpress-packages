@@ -95,10 +95,11 @@ abstract class BasePresenter{
 		{
 			return $this->wpo->$var;
 		}
-		else // WP_Query
+		if(isset($this->wpo->post) && isset($this->wpo->post->$var)) // WP_Query
 		{
 			return $this->wpo->post->$var;
 		}
+		return null;
 	}
 
 	/**
