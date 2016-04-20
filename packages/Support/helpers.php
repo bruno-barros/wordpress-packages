@@ -145,7 +145,7 @@ if(! function_exists('view'))
         
         do_action('before_load_view', $path, $data);
 
-        include apply_filters('load_view', $path, $data);
+        include apply_filters('include_load_view', $path, $data);
         
         do_action('after_load_view', $path, $data);
 
