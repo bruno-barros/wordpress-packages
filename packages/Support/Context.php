@@ -130,9 +130,9 @@ class Context
         }
         else
         {
-            if (is_category() && $cat = get_the_category())
+            if (is_category() && $cat = get_category( get_query_var( 'cat' ) ))
             {
-                return $cat[0];
+                return $cat;
             }
             else
             {
