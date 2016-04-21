@@ -84,6 +84,11 @@ class Context
 
             return $wp_query->query['post_type'];
         }
+        
+        if(!$queriedType && is_category())
+        {
+            return $this->term($output);
+        }
 
         if ($output == 'object')
         {
@@ -130,15 +135,19 @@ class Context
         }
         else
         {
-            if (is_category() && $cat = get_category( get_query_var( 'cat' ) ))
+            if (is_category() && $cat = get_category(get_query_var('cat')))
             {
-                return $cat;
+                $cat->label = $cat->name;
+                return $output == 'object' ? $cat : $cat->name;
             }
             else
             {
                 if (is_tag())
                 {
-                    return get_term_by('slug', get_query_var('tag'), 'post_tag');
+                    $tag = get_term_by('slug', get_query_var('tag'), 'post_tag');
+
+                    $tag->label = $tag->name;
+                    return $output == 'object' ? $tag : $tag->name;
                 }
             }
         }
@@ -156,6 +165,7 @@ class Context
             return $this->sudoTerm();
         }
 
+        $term->label = $term->name;
         $term->permalink = get_term_link($term);
 
         return $term;
