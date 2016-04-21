@@ -163,6 +163,11 @@ class Context
 
     public function typeObject($typeSlug = '')
     {
+        if (!is_string($typeSlug))
+        {
+            return $this->sudoTerm();
+        }
+        
         $type = get_post_type_object($typeSlug);
 
         $type->permalink = get_post_type_archive_link($typeSlug);
@@ -174,6 +179,7 @@ class Context
     {
         $term                   = new \stdClass();
         $term->name             = 'desconhecido';
+        $term->label            = 'desconhecido';
         $term->description      = 'desconhecido';
         $term->slug             = 'desconhecido';
         $term->term_id          = 0;
