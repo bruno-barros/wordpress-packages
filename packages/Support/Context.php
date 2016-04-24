@@ -59,12 +59,14 @@ class Context
 
         if (is_search())
         {
-            if ($output == 'object' && isset($_GET['post_type']))
+            $pt = isset($_GET['post_type']) ? $_GET['post_type'] : '';
+
+            if ($output == 'object' && strlen($pt) > 0)
             {
-                return $this->typeObject($_GET['post_type']);
+                return $this->typeObject($pt);
             }
 
-            return 'search';
+            return 'search' . ((strlen($pt) > 0) ? ".{$pt}" : '');
         }
 
         if (is_404())
