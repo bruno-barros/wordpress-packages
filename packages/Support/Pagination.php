@@ -141,8 +141,8 @@ class Pagination
         //set the "paginate_links" array to do what we would like it it.
         //Check the codex for examples http://codex.wordpress.org/Function_Reference/paginate_links
         $pagination = array(
-            'base'     => @add_query_arg('paged', '%#%'),
-            //'format' => '',
+            //'base'     => @add_query_arg('paged', '%#%'),
+            'format' => 'page/%#%',
             'showall'  => false,
             'end_size' => $this->endSize,
             'mid_size' => $this->midSize,
@@ -154,10 +154,10 @@ class Pagination
         );
 
         //build the paging links
-        if ($wp_rewrite->using_permalinks())
-        {
-            $pagination['base'] = user_trailingslashit(trailingslashit(remove_query_arg('s', get_pagenum_link(1))) . 'page/%#%/', 'paged');
-        }
+        //if ($wp_rewrite->using_permalinks())
+        //{
+        //    $pagination['base'] = user_trailingslashit(trailingslashit(remove_query_arg('s', get_pagenum_link(1))) . 'page/%#%/', 'paged');
+        //}
 
         //more paging links
         if (!empty($wp_query->query_vars['s']))
