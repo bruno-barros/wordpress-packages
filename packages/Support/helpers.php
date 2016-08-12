@@ -113,6 +113,14 @@ if(! function_exists('config'))
     }
 }
 
+if(! function_exists('e_view'))
+{
+    function e_view($view = '', $data = array(), $default = '')
+    {
+        echo view($view, $data, $default);
+    }
+}
+
 if(! function_exists('view'))
 {
 
