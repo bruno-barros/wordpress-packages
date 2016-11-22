@@ -129,15 +129,24 @@ if(! function_exists('view'))
 
         $view = str_replace('.php', '', $view);
         $view = str_replace('.', DIRECTORY_SEPARATOR, $view);
+        
+        // check if is a module
+        $preView = '';
+        if(str_contains($view, ':'))
+        {
+            $arrV = explode(':', $view);
+            $preView = $arrV[0] . DIRECTORY_SEPARATOR;
+            $view = $arrV[1];
+        }
 
-        $path  = $original  = get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $view . '.php';
+        $path  = $original  = get_stylesheet_directory() . DIRECTORY_SEPARATOR . $preView . 'views' . DIRECTORY_SEPARATOR . $view . '.php';
 
 
         if (!file_exists($path))
         {
             $default = str_replace('.php', '', $default);
             $default = str_replace('.', DIRECTORY_SEPARATOR, $default);
-            $path = get_stylesheet_directory() . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $default . '.php';
+            $path = get_stylesheet_directory() . DIRECTORY_SEPARATOR . $preView . 'views' . DIRECTORY_SEPARATOR . $default . '.php';
 
             if (!file_exists($path))
             {
