@@ -31,7 +31,7 @@ class PagePresenter extends PostPresenter
 		}
 		$parent = get_post($this->post_parent);
 
-		return new self($parent, false);
+		return new static($parent, false);
 	}
 
 
@@ -63,7 +63,7 @@ class PagePresenter extends PostPresenter
 
 		foreach ($childrenPages->posts as $p)
 		{
-			$pages[] = new self($p, false);
+			$pages[] = new static($p, false);
 		}
 
 		return Collection::make($pages);
