@@ -140,7 +140,7 @@ class Context
             if (is_category() && $cat = get_category(get_query_var('cat')))
             {
                 $cat->label = $cat->name;
-                return $output == 'object' ? $cat : $cat->name;
+                return $output == 'object' ? $cat : $cat->slug;
             }
             else
             {
