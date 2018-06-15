@@ -126,7 +126,7 @@ class Context
 
         $self = static::make();
 
-        if (isset($wp_query->query_vars['term']))
+        if (isset($wp_query->query_vars['term']) && !is_category())
         {
             if ($output == 'object')
             {
