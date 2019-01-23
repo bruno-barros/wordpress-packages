@@ -29,7 +29,8 @@
     "illuminate/http": "5.5.*",
     "illuminate/validation" : "5.5.*",
     "illuminate/database": "5.5.*",
-    "patchwork/utf8": "~1.1"
+    "patchwork/utf8": "~1.1",
+    "symfony/cache": "3.4.*"
   },
   "require-dev": {},
   "minimum-stability": "dev",

@@ -4,6 +4,7 @@
 use Closure;
 use Illuminate\Cache\CacheManager;
 use Illuminate\Filesystem\Filesystem;
+use Symfony\Component\Cache\Simple\FilesystemCache;
 
 /**
  * Cache
@@ -32,28 +33,28 @@ class Cache
     {
         if (is_null(self::$instance))
         {
-            $cacheManager = new CacheManager(array(
-                'files'  => new FileSystem(),
-                'config' => array(
-                    'cache.driver' => 'file',
-                    'cache.path'   => path('cache'),
-                    'cache.prefix' => 'wordpress_'
-                )
-            ));
-
-            $cache = $cacheManager->driver();
-
-            self::$instance = new static($cache);
+//            $cacheManager = new CacheManager(array(
+//                'files'  => new FileSystem(),
+//                'config' => array(
+//                    'cache.driver' => 'file',
+//                    'cache.path'   => path('cache'),
+//                    'cache.prefix' => 'wordpress_'
+//                )
+//            ));
+//
+//            $cache = $cacheManager->driver();
+//
+//            self::$instance = new static($cache);
+            self::$instance = new FilesystemCache('', 0, path('cache'));
+    
         }
 
         return self::$instance;
     }
 
-    public static function get($key)
+    public static function get($key, $default = null)
     {
-        $self = static::make();
-
-        return $self->cache->get($key);
+        return static::make()->get($key, $default);
 
     }
 
@@ -62,14 +63,12 @@ class Cache
      *
      * @param  string $key
      * @param  mixed $value
-     * @param  \DateTime|int $minutes
+     * @param  int $minutes
      * @return void
      */
     public static function put($key, $value, $minutes = 10)
     {
-        $self = static::make();
-
-        $self->cache->put($key, $value, (int)$minutes);
+        static::make()->set($key, $value, (int)$minutes * 60);
     }
 
 
@@ -78,12 +77,12 @@ class Cache
 
         $self = static::make();
 
-        if (!is_null($value = $self->cache->get($key)))
+        if ($self->has($key))
         {
-            return $value;
+            return $self->get($key);
         }
 
-        $self->cache->put($key, $value = $callback(), (int)$minutes);
+        $self->set($key, $value = $callback(), (int)$minutes * 60);
 
         return $value;
 
@@ -99,9 +98,7 @@ class Cache
      */
     public static function forever($key, $value)
     {
-        $self = static::make();
-
-        return $self->cache->put($key, $value, 0);
+        static::make()->set($key, $value, 0);
     }
 
     /**
@@ -112,9 +109,7 @@ class Cache
      */
     public static function forget($key)
     {
-        $self = static::make();
-
-        return $self->cache->forget($key);
+        static::make()->delete($key);
     }
 
 
@@ -130,9 +125,9 @@ class Cache
     {
         $self = static::make();
 
-        if (is_null($self->cache->get($key)))
+        if (!$self->has($key))
         {
-            $self->cache->put($key, $value, (int)$minutes);
+            $self->set($key, $value, (int)$minutes * 60);
 
             return true;
         }
@@ -142,9 +137,7 @@ class Cache
 
     public static function has($key)
     {
-        $self = static::make();
-
-        return !is_null($self->cache->get($key));
+        return static::make()->has($key);
     }
 
 
@@ -153,8 +146,6 @@ class Cache
      */
     public static function flush()
     {
-        $self = static::make();
-
-        $self->cache->flush();
+        static::make()->clear();
     }
 }
