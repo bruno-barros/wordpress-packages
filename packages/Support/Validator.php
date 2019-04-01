@@ -1,5 +1,9 @@
 <?php namespace WpPack\Support;
 
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Translation\FileLoader;
+use Illuminate\Translation\Translator;
+
 /**
  * Validator
  *
@@ -14,10 +18,26 @@ class Validator
     {
         if ( ! static::$factory)
         {
-            static::$factory = new \Illuminate\Validation\Factory(new \Symfony\Component\Translation\Translator(get_locale()));
+            static::$factory = new \Illuminate\Validation\Factory(static::loadTranslator(get_locale()));
         }
 
         return static::$factory;
+    }
+    
+    protected static function loadTranslator($lang = 'pt_br')
+    {
+        $lang = strtolower($lang);
+        
+        $filesystem = new Filesystem();
+
+        $loader = new FileLoader(
+            $filesystem, SRC_PATH . '/languages');
+        $loader->addNamespace(
+            'lang',
+            SRC_PATH . '/languages'
+        );
+        $loader->load($lang, 'validation', 'lang');
+        return new Translator($loader, $lang);
     }
 
     public static function __callStatic($method, $args)
