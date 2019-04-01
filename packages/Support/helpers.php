@@ -31,7 +31,7 @@ if(! function_exists('path'))
      */
     function path($folder = 'app')
     {
-        $paths = require ABSPATH . '/src/bootstrap/paths.php';
+        $paths = require SRC_PATH . '/bootstrap/paths.php';
 
         if (isset($paths[$folder]))
         {
