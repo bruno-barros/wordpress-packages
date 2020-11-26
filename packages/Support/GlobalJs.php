@@ -1,7 +1,6 @@
 <?php namespace WpPack\Support;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 
 /**
  * GlobalJs
