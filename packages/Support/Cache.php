@@ -2,9 +2,7 @@
 
 
 use Closure;
-use Illuminate\Cache\CacheManager;
-use Illuminate\Filesystem\Filesystem;
-use Symfony\Component\Cache\Simple\FilesystemCache;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 /**
  * Cache
@@ -45,7 +43,7 @@ class Cache
 //            $cache = $cacheManager->driver();
 //
 //            self::$instance = new static($cache);
-            self::$instance = new FilesystemCache('', 0, path('cache'));
+            self::$instance = new FilesystemAdapter('', 0, path('cache'));
     
         }
 
