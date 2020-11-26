@@ -23,7 +23,7 @@
     }
   },
   "require": {
-    "php": ">=7",
+    "php": ">=7.2.5",
     "illuminate/cache": "7.0.*",
     "illuminate/filesystem": "7.0.*",
     "illuminate/http": "7.0.*",
