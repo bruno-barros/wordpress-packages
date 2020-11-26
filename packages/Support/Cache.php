@@ -53,17 +53,21 @@ class Cache
 
     public static function get($key, $default = null)
     {
-        return static::make()->get($key, $default);
+        return static::make()->get($key, function (ItemInterface $item) use($default) {
+            return $default;
+        });
+//        return static::make()->get($key, $default);
 
     }
-
+    
     /**
      * Store an item in the cache.
      *
-     * @param  string $key
-     * @param  mixed $value
-     * @param  int $minutes
+     * @param string $key
+     * @param mixed $value
+     * @param int $minutes
      * @return void
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public static function put($key, $value, $minutes = 10)
     {
@@ -71,7 +75,6 @@ class Cache
                  $item->expiresAfter((int)$minutes * 60);
                  return $value;
              });
-//        static::make()->set($key, $value, (int)$minutes * 60);
     }
 
 
