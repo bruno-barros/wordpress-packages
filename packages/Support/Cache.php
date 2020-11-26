@@ -1,6 +1,7 @@
 <?php namespace WpPack\Support;
 
 use Closure;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -38,9 +39,15 @@ class Cache
     
     public static function get($key, $default = null)
     {
-        return static::make()->get($key, function (ItemInterface $item) use ($default) {
-            return $default;
-        });
+        try
+        {
+            return static::make()->get($key, function (ItemInterface $item) use ($default) {
+                return $default;
+            });
+        } catch (InvalidArgumentException $e)
+        {
+            return null;
+        }
     }
     
     /**
@@ -50,26 +57,35 @@ class Cache
      * @param mixed $value
      * @param int $minutes
      * @return void
-     * @throws \Psr\Cache\InvalidArgumentException
      */
     public static function put($key, $value, $minutes = 10)
     {
-        static::make()->get($key, function (ItemInterface $item) use ($value, $minutes) {
-            $item->expiresAfter((int)$minutes * 60);
+        try
+        {
+            static::make()->get($key, function (ItemInterface $item) use ($value, $minutes) {
+                $item->expiresAfter((int)$minutes * 60);
             
-            return $value;
-        });
+                return $value;
+            });
+        } catch (InvalidArgumentException $e)
+        {
+        }
     }
     
     
     public static function remember($key, $minutes, Closure $callback)
     {
-        return static::make()->get($key, function (ItemInterface $item)
-        use ($callback, $minutes) {
-            $item->expiresAfter((int)$minutes * 60);
+        try
+        {
+            return static::make()->get($key, function (ItemInterface $item)
+            use ($callback, $minutes) {
+                $item->expiresAfter((int)$minutes * 60);
             
-            return $callback();
-        });
+                return $callback();
+            });
+        } catch (InvalidArgumentException $e)
+        {
+        }
     }
     
     
@@ -79,11 +95,15 @@ class Cache
      * @param string $key
      * @param mixed $value
      * @return void
-     * @throws \Psr\Cache\InvalidArgumentException
      */
     public static function forever($key, $value)
     {
-        static::put($key, $value, 525600);
+        try
+        {
+            static::put($key, $value, 525600);
+        } catch (InvalidArgumentException $e)
+        {
+        }
     }
     
     /**
@@ -91,11 +111,15 @@ class Cache
      *
      * @param string $key
      * @return void
-     * @throws \Psr\Cache\InvalidArgumentException
      */
     public static function forget($key)
     {
-        static::make()->delete($key);
+        try
+        {
+            static::make()->delete($key);
+        } catch (InvalidArgumentException $e)
+        {
+        }
     }
     
     
@@ -124,7 +148,13 @@ class Cache
     
     public static function has($key)
     {
-        return static::make()->hasItem($key);
+        try
+        {
+            return static::make()->hasItem($key);
+        } catch (InvalidArgumentException $e)
+        {
+            return false;
+        }
     }
     
     
