@@ -3,6 +3,7 @@
 
 use Closure;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Contracts\Cache\ItemInterface;
 
 /**
  * Cache
@@ -66,7 +67,11 @@ class Cache
      */
     public static function put($key, $value, $minutes = 10)
     {
-        static::make()->set($key, $value, (int)$minutes * 60);
+        static::make()->get($key, function (ItemInterface $item) use($value, $minutes) {
+                 $item->expiresAfter((int)$minutes * 60);
+                 return $value;
+             });
+//        static::make()->set($key, $value, (int)$minutes * 60);
     }
 
 
