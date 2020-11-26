@@ -1,9 +1,8 @@
 <?php namespace WpPack\Support;
 
+
 use Closure;
-use Psr\Cache\InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Component\Cache\Simple\FilesystemCache;
 
 /**
  * Cache
@@ -23,6 +22,7 @@ class Cache
      */
     public function __construct($driver)
     {
+        
         $this->cache = $driver;
     }
     
@@ -31,7 +31,7 @@ class Cache
     {
         if (is_null(self::$instance))
         {
-            self::$instance = new FilesystemAdapter('', 0, path('cache'));
+            self::$instance = new FilesystemCache('', 0, path('cache'));
         }
         
         return self::$instance;
@@ -39,107 +39,81 @@ class Cache
     
     public static function get($key, $default = null)
     {
-        try
-        {
-            return static::make()->get($key, function (ItemInterface $item) use ($default) {
-                return $default;
-            });
-        } catch (InvalidArgumentException $e)
-        {
-            return null;
-        }
+        return static::make()->get($key, $default);
+        
     }
     
     /**
      * Store an item in the cache.
      *
-     * @param string $key
-     * @param mixed $value
-     * @param int $minutes
+     * @param  string $key
+     * @param  mixed $value
+     * @param  int $minutes
      * @return void
      */
     public static function put($key, $value, $minutes = 10)
     {
-        try
-        {
-            static::make()->get($key, function (ItemInterface $item) use ($value, $minutes) {
-                $item->expiresAfter((int)$minutes * 60);
-            
-                return $value;
-            });
-        } catch (InvalidArgumentException $e)
-        {
-        }
+        static::make()->set($key, $value, (int)$minutes * 60);
     }
     
     
-    public static function remember($key, $minutes, Closure $callback)
+    public static function remember($key, $minutes = 10, Closure $callback)
     {
-        try
+        
+        $self = static::make();
+        
+        if ($self->has($key))
         {
-            return static::make()->get($key, function (ItemInterface $item)
-            use ($callback, $minutes) {
-                $item->expiresAfter((int)$minutes * 60);
-            
-                return $callback();
-            });
-        } catch (InvalidArgumentException $e)
-        {
+            return $self->get($key);
         }
+        
+        $self->set($key, $value = $callback(), (int)$minutes * 60);
+        
+        return $value;
+        
     }
     
     
     /**
      * Store an item in the cache indefinitely.
      *
-     * @param string $key
-     * @param mixed $value
+     * @param  string $key
+     * @param  mixed $value
      * @return void
      */
     public static function forever($key, $value)
     {
-        try
-        {
-            static::put($key, $value, 525600);
-        } catch (InvalidArgumentException $e)
-        {
-        }
+        static::make()->set($key, $value, 0);
     }
     
     /**
      * Remove an item from the cache.
      *
-     * @param string $key
+     * @param  string  $key
      * @return void
      */
     public static function forget($key)
     {
-        try
-        {
-            static::make()->delete($key);
-        } catch (InvalidArgumentException $e)
-        {
-        }
+        static::make()->delete($key);
     }
     
     
     /**
      * Store an item in the cache if the key does not exist.
      *
-     * @param string $key
-     * @param mixed $value
-     * @param \DateTime|int $minutes
+     * @param  string $key
+     * @param  mixed $value
+     * @param  \DateTime|int $minutes
      * @return bool
-     * @throws \Psr\Cache\InvalidArgumentException
      */
     public static function add($key, $value, $minutes = 10)
     {
-        /** @var FilesystemAdapter $adapter */
-        $adapter = static::make();
-
-        if (!$adapter->hasItem($key))
+        $self = static::make();
+        
+        if (!$self->has($key))
         {
-            static::put($key, $value, (int)$minutes);
+            $self->set($key, $value, (int)$minutes * 60);
+            
             return true;
         }
         
@@ -148,13 +122,7 @@ class Cache
     
     public static function has($key)
     {
-        try
-        {
-            return static::make()->hasItem($key);
-        } catch (InvalidArgumentException $e)
-        {
-            return false;
-        }
+        return static::make()->has($key);
     }
     
     
