@@ -40,7 +40,7 @@ class Cache
         }
         if (is_null(self::$tagInstance))
         {
-            self::$instance = new FilesystemTagAwareAdapter('weloquent', 0, path('cache'));
+            self::$tagInstance = new FilesystemTagAwareAdapter('weloquent', 0, path('cache'));
         }
         
         return $tagSupport ? self::$tagInstance : self::$instance;
