@@ -7,7 +7,6 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemTagAwareAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
 
-
 /**
  * Cache
  *
@@ -69,7 +68,7 @@ class Cache
         {
             static::make()->get($key, function (ItemInterface $item) use ($value, $minutes) {
                 $item->expiresAfter((int)$minutes * 60);
-            
+                
                 return $value;
             });
         } catch (InvalidArgumentException $e)
@@ -85,8 +84,11 @@ class Cache
             return static::make()->get($key, function (ItemInterface $item)
             use ($callback, $minutes, $tags) {
                 $item->expiresAfter((int)$minutes * 60);
-                $item->tag($tags);
-            
+                if ($tags)
+                {
+                    $item->tag($tags);
+                }
+                
                 return $callback();
             });
         } catch (InvalidArgumentException $e)
@@ -131,10 +133,10 @@ class Cache
     /**
      * Remove an item from the cache.
      *
-     * @param string|array $tags
+     * @param array $tags
      * @return void
      */
-    public static function forgetTags($tags)
+    public static function forgetTags(array $tags = [])
     {
         try
         {
@@ -158,10 +160,11 @@ class Cache
     {
         /** @var FilesystemAdapter $adapter */
         $adapter = static::make();
-
+        
         if (!$adapter->hasItem($key))
         {
             static::put($key, $value, (int)$minutes);
+            
             return true;
         }
         
