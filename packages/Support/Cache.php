@@ -2,7 +2,6 @@
 
 use Closure;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemTagAwareAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -16,6 +15,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 class Cache
 {
     public static $instance;
+    public static $tagInstance;
     
     private $cache;
     
@@ -29,16 +29,21 @@ class Cache
     }
     
     /**
-     * @return FilesystemAdapter
+     * @param bool $tagSupport
+     * @return FilesystemAdapter|FilesystemTagAwareAdapter
      */
-    public static function make()
+    public static function make($tagSupport = false)
     {
         if (is_null(self::$instance))
         {
             self::$instance = new FilesystemAdapter('weloquent', 0, path('cache'));
         }
+        if (is_null(self::$tagInstance))
+        {
+            self::$tagInstance = new FilesystemTagAwareAdapter('weloquent', 0, path('cache'));
+        }
         
-        return self::$instance;
+        return $tagSupport ? self::$tagInstance : self::$instance;
     }
     
     public static function get($key, $default = null)
@@ -81,7 +86,7 @@ class Cache
     {
         try
         {
-            return static::make()->get($key, function (ItemInterface $item)
+            return static::make((bool)$tags)->get($key, function (ItemInterface $item)
             use ($callback, $minutes, $tags) {
                 $item->expiresAfter((int)$minutes * 60);
                 if ($tags)
@@ -131,7 +136,6 @@ class Cache
     }
     
     /**
-     * TODO need work
      * Remove an item from the cache.
      *
      * @param array $tags
@@ -141,7 +145,7 @@ class Cache
     {
         try
         {
-            static::make()->invalidateTags($tags);
+            static::make(true)->invalidateTags($tags);
         } catch (InvalidArgumentException $e)
         {
         }
