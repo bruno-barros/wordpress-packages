@@ -2,7 +2,9 @@
 
 use Closure;
 use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Adapter\FilesystemTagAwareAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
 
 
@@ -27,12 +29,14 @@ class Cache
         $this->cache = $driver;
     }
     
-    
+    /**
+     * @return FilesystemTagAwareAdapter
+     */
     public static function make()
     {
         if (is_null(self::$instance))
         {
-            self::$instance = new FilesystemAdapter('', 0, path('cache'));
+            self::$instance = new FilesystemTagAwareAdapter('weloquent', 0, path('cache'));
         }
         
         return self::$instance;
@@ -74,13 +78,14 @@ class Cache
     }
     
     
-    public static function remember($key, $minutes, Closure $callback)
+    public static function remember($key, $minutes, Closure $callback, $tags = null)
     {
         try
         {
             return static::make()->get($key, function (ItemInterface $item)
-            use ($callback, $minutes) {
+            use ($callback, $minutes, $tags) {
                 $item->expiresAfter((int)$minutes * 60);
+                $item->tag($tags);
             
                 return $callback();
             });
@@ -118,6 +123,22 @@ class Cache
         try
         {
             static::make()->delete($key);
+        } catch (InvalidArgumentException $e)
+        {
+        }
+    }
+    
+    /**
+     * Remove an item from the cache.
+     *
+     * @param string|array $tags
+     * @return void
+     */
+    public static function forgetTags($tags)
+    {
+        try
+        {
+            static::make()->invalidateTags($tags);
         } catch (InvalidArgumentException $e)
         {
         }
