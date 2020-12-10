@@ -35,7 +35,7 @@ class Cache
     {
         if (is_null(self::$instance))
         {
-            self::$instance = new FilesystemAdapter('', 0, path('cache'));
+            self::$instance = new FilesystemAdapter('weloquent', 0, path('cache'));
         }
         
         return self::$instance;
@@ -131,12 +131,13 @@ class Cache
     }
     
     /**
+     * TODO need work
      * Remove an item from the cache.
      *
      * @param array $tags
      * @return void
      */
-    public static function forgetTags(array $tags = [])
+    protected static function forgetTags(array $tags = [])
     {
         try
         {
