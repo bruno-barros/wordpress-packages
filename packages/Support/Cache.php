@@ -29,13 +29,13 @@ class Cache
     }
     
     /**
-     * @return FilesystemTagAwareAdapter
+     * @return FilesystemAdapter
      */
     public static function make()
     {
         if (is_null(self::$instance))
         {
-            self::$instance = new FilesystemTagAwareAdapter('weloquent', 0, path('cache'));
+            self::$instance = new FilesystemAdapter('', 0, path('cache'));
         }
         
         return self::$instance;
