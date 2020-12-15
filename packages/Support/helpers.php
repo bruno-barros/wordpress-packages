@@ -16,12 +16,12 @@ if (!function_exists('env'))
         {
             return $default;
         }
-
+        
         return $value;
     }
 }
 
-if(! function_exists('path'))
+if (!function_exists('path'))
 {
     /**
      * Return a specified path, or all paths
@@ -32,20 +32,20 @@ if(! function_exists('path'))
     function path($folder = 'app')
     {
         $paths = require SRC_PATH . '/bootstrap/paths.php';
-
+        
         if (isset($paths[$folder]))
         {
             return $paths[$folder];
         }
-
+        
         return $paths;
     }
-
+    
 }
 
-if(! function_exists('config'))
+if (!function_exists('config'))
 {
-
+    
     /**
      * @param string $file
      * @return mixed|null
@@ -53,9 +53,9 @@ if(! function_exists('config'))
     function config($file = 'app')
     {
         $path = path('app') . '/config';
-
+        
         $levels = explode('.', $file);
-
+        
         if (count($levels) == 1)
         {
             if (file_exists($path . DS . $file . '.php'))
@@ -72,7 +72,7 @@ if(! function_exists('config'))
             if (count($levels) > 1)
             {
                 $file = array_shift($levels);
-
+                
                 if (file_exists($path . DS . $file . '.php'))
                 {
                     $array = require($path . DS . $file . '.php');
@@ -81,14 +81,14 @@ if(! function_exists('config'))
                 {
                     die("<h1>{$path}/{$file}.php not found</h1>");
                 }
-
+                
                 if (count($levels) == 1 && isset($array[$levels[0]]))
                 {
                     return $array[$levels[0]];
                 }
                 else
                 {
-
+                    
                     $pointer = $array;
                     foreach ($levels as $k => $v)
                     {
@@ -101,19 +101,19 @@ if(! function_exists('config'))
                             return null;
                         }
                     }
-
+                    
                     return $pointer;
-
+                    
                 }
-
+                
             }
         }
-
+        
         return null;
     }
 }
 
-if(! function_exists('e_view'))
+if (!function_exists('e_view'))
 {
     function e_view($view = '', $data = array(), $default = '')
     {
@@ -121,56 +121,62 @@ if(! function_exists('e_view'))
     }
 }
 
-if(! function_exists('view'))
+if (!function_exists('view'))
 {
-
+    
     function view($view = '', $data = array(), $default = '', $basePath = null)
     {
-
-        if(!$basePath){
+        
+        if (!$basePath)
+        {
             $basePath = get_stylesheet_directory();
         }
-    
+        else if (str_contains($view, '@'))
+        {
+            $arrV    = explode('@', $view);
+            $basePath = $arrV[0];
+            $view    = $arrV[1];
+        }
+        
         $view = str_replace('.php', '', $view);
         $view = str_replace('.', DIRECTORY_SEPARATOR, $view);
         
         // check if is a module
         $preView = '';
-        if(str_contains($view, ':'))
+        if (str_contains($view, ':'))
         {
-            $arrV = explode(':', $view);
+            $arrV    = explode(':', $view);
             $preView = $arrV[0] . DIRECTORY_SEPARATOR;
-            $view = $arrV[1];
+            $view    = $arrV[1];
         }
-
-        $path  = $original  = $basePath . DIRECTORY_SEPARATOR . $preView . 'views' . DIRECTORY_SEPARATOR . $view . '.php';
-
-
+        
+        $path = $original = $basePath . DIRECTORY_SEPARATOR . $preView . 'views' . DIRECTORY_SEPARATOR . $view . '.php';
+        
         if (!file_exists($path))
         {
             $default = str_replace('.php', '', $default);
             $default = str_replace('.', DIRECTORY_SEPARATOR, $default);
-            $path = $basePath . DIRECTORY_SEPARATOR . $preView . 'views' . DIRECTORY_SEPARATOR . $default . '.php';
-
+            $path    = $basePath . DIRECTORY_SEPARATOR . $preView . 'views' . DIRECTORY_SEPARATOR . $default . '.php';
+            
             if (!file_exists($path))
             {
                 die("<h1>View \"{$original}\" not found</h1>");
             }
         }
-
+        
         global $wp_query, $withcomments, $post, $wpdb, $id, $comment, $user_login, $user_ID, $user_identity, $overridden_cpage;
-
+        
         ob_start();
-
+        
         extract((array)$data);
         
         do_action('before_load_view', $path, $data);
-
+        
         include apply_filters('include_load_view', $path, $data);
         
         do_action('after_load_view', $path, $data);
-
+        
         return ob_get_clean();
-
+        
     }
 }
