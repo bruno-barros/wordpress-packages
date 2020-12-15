@@ -130,7 +130,7 @@ if(! function_exists('view'))
         if(!$basePath){
             $basePath = get_stylesheet_directory();
         }
-        dd($basePath);
+    
         $view = str_replace('.php', '', $view);
         $view = str_replace('.', DIRECTORY_SEPARATOR, $view);
         
