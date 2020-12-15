@@ -131,7 +131,7 @@ if (!function_exists('view'))
         {
             $basePath = get_stylesheet_directory();
         }
-        if (str_contains($view, '@') && !$basePath)
+        if (str_contains($view, '@'))
         {
             $arrV    = explode('@', $view);
             $basePath = $arrV[0];
