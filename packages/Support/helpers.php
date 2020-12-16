@@ -53,6 +53,13 @@ if (!function_exists('config'))
     function config($file = 'app')
     {
         $path = path('app') . '/config';
+    
+        if (str_contains($file, '@'))
+        {
+            $arrV    = explode('@', $file);
+            $path = $arrV[0].'/config';
+            $file    = $arrV[1];
+        }
         
         $levels = explode('.', $file);
         
