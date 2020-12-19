@@ -150,7 +150,7 @@ class GlobalJs
         {
             $meta = Arr::get($this->metas, $key);
 
-            return ($admin === false && ($meta['admin'] ?? $meta['admin'] === true)) ? false : true;
+            return ($admin === false && isset($meta['admin']) && $meta['admin'] === true) ? false : true;
         });
     }
 
