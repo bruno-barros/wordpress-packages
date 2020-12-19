@@ -330,7 +330,7 @@ class PostPresenter extends BasePresenter
 	{
 		$img = wp_get_attachment_image_src(get_post_thumbnail_id($this->ID), $size);
 
-		return $img[0];
+		return is_array($img) ? $img[0] : '';
 	}
     
     /**
