@@ -36,7 +36,7 @@ class Ajax
      * @param callable|string $callable The function to run when ajax action is called
      * @throws AjaxException
      */
-    public function listen($action, $logged = 'no', $callable)
+    public function listen($action, $logged = 'no', callable $callable = null)
     {
 
         if (!is_string($action) || strlen($action) == 0)
