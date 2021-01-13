@@ -12,8 +12,14 @@ use Illuminate\Translation\Translator;
  */
 class Validator
 {
+    /**
+     * @var \Illuminate\Validation\Validator
+     */
     protected static $factory;
-
+    
+    /**
+     * @return \Illuminate\Validation\Validator
+     */
     public static function setup()
     {
         if ( ! static::$factory)
