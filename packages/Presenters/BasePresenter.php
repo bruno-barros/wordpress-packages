@@ -91,7 +91,7 @@ abstract class BasePresenter{
 			return $this->$method();
 		}
 
-		if (get_class($this->wpo) == 'WP_Post')
+		if ($this->wpo && get_class($this->wpo) == 'WP_Post')
 		{
 			return $this->wpo->$var;
 		}
