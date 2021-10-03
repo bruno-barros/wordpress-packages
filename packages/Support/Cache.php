@@ -82,7 +82,14 @@ class Cache
         }
     }
     
-    
+
+    /**
+     * @param $key
+     * @param $minutes
+     * @param Closure $callback
+     * @param null|string|array $tags
+     * @return mixed
+     */
     public static function remember($key, $minutes, Closure $callback, $tags = null)
     {
         try
@@ -142,7 +149,8 @@ class Cache
      * @param array $tags
      * @return void
      */
-    protected static function forgetTags(array $tags = [])
+    public static function forgetTags(array $tags)
+
     {
         try
         {

@@ -33,10 +33,10 @@ class Ajax
      *
      * @param string $action Your ajax 'action' name
      * @param string $logged Accepted values are 'no', 'yes', 'both'
-     * @param callable|string $callable The function to run when ajax action is called
+     * @param string $callable The function to run when ajax action is called
      * @throws AjaxException
      */
-    public function listen($action, $logged = 'no', $callable)
+    public function listen($action, $logged = 'no', $callable = null)
     {
 
         if (!is_string($action) || strlen($action) == 0)
