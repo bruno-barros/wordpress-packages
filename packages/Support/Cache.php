@@ -57,6 +57,7 @@ class Cache
         {
             return null;
         }
+        
     }
     
     /**
@@ -81,6 +82,7 @@ class Cache
         }
     }
     
+
     /**
      * @param $key
      * @param $minutes
@@ -148,6 +150,7 @@ class Cache
      * @return void
      */
     public static function forgetTags(array $tags)
+
     {
         try
         {
