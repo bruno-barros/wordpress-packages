@@ -23,14 +23,13 @@
     }
   },
   "require": {
-    "php": ">=7.4",
-    "illuminate/cache": "8.*",
-    "illuminate/filesystem": "8.*",
-    "illuminate/http": "8.*",
-    "illuminate/validation" : "8.*",
-    "illuminate/database": "8.*",
-    "patchwork/utf8": "~1.1",
-    "symfony/cache": "^5.4"
+    "php": ">=8.0",
+    "illuminate/cache": "9.*",
+    "illuminate/filesystem": "9.*",
+    "illuminate/http": "9.*",
+    "illuminate/validation" : "9.*",
+    "illuminate/database": "9.*",
+    "symfony/cache": "^6.0"
   },
   "require-dev": {},
   "minimum-stability": "dev",
