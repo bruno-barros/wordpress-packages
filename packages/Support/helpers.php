@@ -1,6 +1,6 @@
 <?php
 function wordpress_packages_version(){
-    return '4.0.0';
+    return '4.0.1';
 }
 
 if (!function_exists('env'))

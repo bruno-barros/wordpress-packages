@@ -1,4 +1,6 @@
-<?php namespace WpPack\Support;
+<?php
+
+namespace WpPack\Support;
 
 use Illuminate\Support\Arr;
 
@@ -25,8 +27,7 @@ class GlobalJs
 
     public static function make()
     {
-        if (is_null(self::$instance))
-        {
+        if (is_null(self::$instance)) {
             self::$instance = new static;
         }
 
@@ -44,8 +45,7 @@ class GlobalJs
      */
     public function add($index, $data = null, $toAdmin = false)
     {
-        if (!$this->has($index))
-        {
+        if (!$this->has($index)) {
             $this->data = Arr::add($this->data, $index, $data);
 
             $this->metas = Arr::add($this->metas, $this->firstIndex($index), ['admin' => $toAdmin]);
@@ -57,7 +57,6 @@ class GlobalJs
     private function firstIndex($index)
     {
         return $firstIdx = explode('.', $index)[0];
-
     }
 
     /**
@@ -70,6 +69,14 @@ class GlobalJs
      */
     public function update($index, $data = null, $toAdmin = null)
     {
+        if ($this->has($index)) {
+            Arr::set($this->data, $index, $data);
+
+            if ($toAdmin !== null) {
+                $firstIdx = $this->firstIndex($index);
+                Arr::set($this->metas, $firstIdx . '.admin', (bool) $toAdmin);
+            }
+        }
 
         return $this;
     }
@@ -82,8 +89,7 @@ class GlobalJs
      */
     public function remove($index)
     {
-        if ($this->has($index))
-        {
+        if ($this->has($index)) {
             Arr::forget($this->data, $index);
             Arr::forget($this->metas, $this->firstIndex($index));
         }
@@ -125,8 +131,7 @@ class GlobalJs
     {
         $data = $this->prepareDataToJson($admin);
 
-        if (count($data) == 0)
-        {
+        if (count($data) == 0) {
             return '{}';
         }
 
@@ -146,8 +151,7 @@ class GlobalJs
     private function prepareDataToJson($admin = false)
     {
         // apply admin filter
-        return Arr::where($this->getData(), function ($key, $value) use ($admin)
-        {
+        return Arr::where($this->getData(), function ($value, $key) use ($admin) {
             $meta = Arr::get($this->metas, $key);
 
             return ($admin === false && isset($meta['admin']) && $meta['admin'] === true) ? false : true;
@@ -170,5 +174,4 @@ class GlobalJs
     {
         $this->add('ajaxurl', admin_url('admin-ajax.php'));
     }
-
 }
